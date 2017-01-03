@@ -66,6 +66,7 @@
             android:layout_gravity="center_vertical|end"
             style="?attr/borderlessButtonStyle"
             android:textColor="@color/colorPrimary"
+            android:id="@+id/search_button"
             />
     </FrameLayout>
 

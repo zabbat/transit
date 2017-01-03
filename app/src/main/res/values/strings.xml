@@ -3,4 +3,5 @@
     <string name="start_txt">Start</string>
     <string name="end_txt">End</string>
     <string name="search_txt">search</string>
+    <string name="title_activity_result">ResultActivity</string>
 </resources>
