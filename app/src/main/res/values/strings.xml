@@ -9,5 +9,7 @@
     <string name="car_sharing">Car Sharing</string>
     <string name="private_bike">Private Bike</string>
     <string name="bike_sharing">Bike Sharing</string>
+    <string name="total_time_min">%s min</string>
+    <string name="N_A">N/A</string>
 
 </resources>

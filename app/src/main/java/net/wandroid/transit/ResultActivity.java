@@ -2,6 +2,7 @@ package net.wandroid.transit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,9 @@ import android.widget.TextView;
 import net.wandroid.transit.model.Transit;
 import net.wandroid.transit.model.TransitUtil;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ResultActivity extends AppCompatActivity {
 
@@ -35,16 +38,18 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         if (getIntent().hasExtra(EXTRA_RESULT)) {
             Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
-            ResultAdapter adapter = new ResultAdapter(transit);
+            ResultAdapter adapter = new ResultAdapter(transit, getResources());
             recyclerView.setAdapter(adapter);
         }
     }
 
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
         private final List<Transit.Route> mData;
+        private final Resources mResources;
 
-        private ResultAdapter(@NonNull Transit transit) {
+        private ResultAdapter(@NonNull Transit transit, Resources resources) {
             mData = transit.routes;
+            mResources = resources;
         }
 
 
@@ -53,7 +58,10 @@ public class ResultActivity extends AppCompatActivity {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transit_item, parent, false);
             TextView title = (TextView) view.findViewById(R.id.title_text);
             TextView price = (TextView) view.findViewById(R.id.price_text);
-            return new ResultViewHolder(view, title, price);
+            TextView startTime = (TextView) view.findViewById(R.id.start_text);
+            TextView finishTime = (TextView) view.findViewById(R.id.finish_text);
+            TextView totalTime = (TextView) view.findViewById(R.id.total_time_text);
+            return new ResultViewHolder(view, title, price, startTime, finishTime, totalTime);
         }
 
         @Override
@@ -73,6 +81,33 @@ public class ResultActivity extends AppCompatActivity {
             } else {
                 holder.priceView.setText("");
             }
+
+            String start = route.segments.get(0).stops.get(0).datetime;
+            try {
+                holder.startView.setText(TransitUtil.formatTimeStamp(start));
+            } catch (ParseException e) {
+                holder.startView.setText(R.string.N_A);
+                e.printStackTrace();
+            }
+
+            int lastSegment = route.segments.size() - 1;
+            int lastStop = route.segments.get(lastSegment).stops.size() - 1;
+            String finish = route.segments.get(lastSegment).stops.get(lastStop).datetime;
+            try {
+                holder.finishView.setText(TransitUtil.formatTimeStamp(finish));
+            } catch (ParseException e) {
+                holder.startView.setText(R.string.N_A);
+                e.printStackTrace();
+            }
+            try {
+                String minutes = Long.toString(TimeUnit.MILLISECONDS.toMinutes(TransitUtil.totalTimeMilli(start, finish)));
+                String total = mResources.getString(R.string.total_time_min, minutes);
+                holder.totalView.setText(total);
+
+            } catch (ParseException e) {
+                holder.startView.setText(R.string.N_A);
+                e.printStackTrace();
+            }
         }
 
 
@@ -84,11 +119,17 @@ public class ResultActivity extends AppCompatActivity {
         public class ResultViewHolder extends RecyclerView.ViewHolder {
             private TextView titleView;
             private TextView priceView;
+            private TextView startView;
+            private TextView finishView;
+            private TextView totalView;
 
-            public ResultViewHolder(View itemView, TextView titleView, TextView priceView) {
+            public ResultViewHolder(View itemView, TextView titleView, TextView priceView, TextView startView, TextView finishView, TextView totalView) {
                 super(itemView);
                 this.titleView = titleView;
                 this.priceView = priceView;
+                this.startView = startView;
+                this.finishView = finishView;
+                this.totalView = totalView;
             }
 
         }
