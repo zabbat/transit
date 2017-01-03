@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.wandroid.transit.model.Transit;
 import net.wandroid.transit.model.TransitUtil;
@@ -38,18 +39,29 @@ public class ResultActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         if (getIntent().hasExtra(EXTRA_RESULT)) {
             Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
-            ResultAdapter adapter = new ResultAdapter(transit, getResources());
+            ResultAdapter adapter = new ResultAdapter(transit, getResources(), new ResultAdapter.IOnItemClickListener() {
+                @Override
+                public void itemClicked(Transit.Route route) {
+                    Toast.makeText(ResultActivity.this, "click:" + route.price.amount, Toast.LENGTH_SHORT).show();
+                }
+            });
             recyclerView.setAdapter(adapter);
         }
     }
 
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
+        public interface IOnItemClickListener {
+            void itemClicked(Transit.Route route);
+        }
+
         private final List<Transit.Route> mData;
         private final Resources mResources;
+        private final IOnItemClickListener mOnItemClickListener;
 
-        private ResultAdapter(@NonNull Transit transit, Resources resources) {
+        private ResultAdapter(@NonNull Transit transit, Resources resources, IOnItemClickListener onItemClickListener) {
             mData = transit.routes;
             mResources = resources;
+            mOnItemClickListener = onItemClickListener;
         }
 
 
@@ -66,7 +78,14 @@ public class ResultActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ResultViewHolder holder, int position) {
-            Transit.Route route = mData.get(position);
+
+            final Transit.Route route = mData.get(position);
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+
             int title = TransitUtil.getTypeStringResourceId(route.type);
             if (title == TransitUtil.NO_RESOURCE) {
                 // if no matching string resource for the type, use the type name
@@ -118,6 +137,7 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         public class ResultViewHolder extends RecyclerView.ViewHolder {
+            private View view;
             private TextView titleView;
             private TextView priceView;
             private TextView startView;
@@ -126,6 +146,7 @@ public class ResultActivity extends AppCompatActivity {
 
             public ResultViewHolder(View itemView, TextView titleView, TextView priceView, TextView startView, TextView finishView, TextView totalView) {
                 super(itemView);
+                view = itemView;
                 this.titleView = titleView;
                 this.priceView = priceView;
                 this.startView = startView;
