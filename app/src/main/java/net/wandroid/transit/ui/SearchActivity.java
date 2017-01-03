@@ -1,4 +1,4 @@
-package net.wandroid.transit;
+package net.wandroid.transit.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
 import net.wandroid.transit.retrofit.api.ServiceGenerator;
 import net.wandroid.transit.retrofit.api.TransitService;

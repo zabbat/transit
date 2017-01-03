@@ -1,20 +1,19 @@
-package net.wandroid.transit;
+package net.wandroid.transit.ui;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
 import net.wandroid.transit.model.TransitUtil;
 
@@ -22,31 +21,40 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ResultActivity extends AppCompatActivity {
 
-    private static final String EXTRA_RESULT = "EXTRA_RESULT";
+public class ResultListFragment extends Fragment {
 
+    public static final String ARG_TRANSIT = "ARG_TRANSIT";
+
+    public static ResultListFragment newInstance(Transit transit) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_TRANSIT, transit);
+        ResultListFragment fragment = new ResultListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.result_recycler_view);
-        //recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = View.inflate(getActivity(), R.layout.fragment_result_list, null);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.result_recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        if (getIntent().hasExtra(EXTRA_RESULT)) {
-            Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
+
+        if (getArguments().containsKey(ARG_TRANSIT)) {
+            Transit transit = (Transit) getArguments().getSerializable(ARG_TRANSIT);
             ResultAdapter adapter = new ResultAdapter(transit, getResources(), new ResultAdapter.IOnItemClickListener() {
                 @Override
                 public void itemClicked(Transit.Route route) {
-                    Toast.makeText(ResultActivity.this, "click:" + route.price.amount, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "click:" + route.price.amount, Toast.LENGTH_SHORT).show();
                 }
             });
             recyclerView.setAdapter(adapter);
         }
+
+
+        return view;
     }
 
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
@@ -56,9 +64,9 @@ public class ResultActivity extends AppCompatActivity {
 
         private final List<Transit.Route> mData;
         private final Resources mResources;
-        private final IOnItemClickListener mOnItemClickListener;
+        private final ResultAdapter.IOnItemClickListener mOnItemClickListener;
 
-        private ResultAdapter(@NonNull Transit transit, Resources resources, IOnItemClickListener onItemClickListener) {
+        private ResultAdapter(@NonNull Transit transit, Resources resources, ResultAdapter.IOnItemClickListener onItemClickListener) {
             mData = transit.routes;
             mResources = resources;
             mOnItemClickListener = onItemClickListener;
@@ -66,23 +74,24 @@ public class ResultActivity extends AppCompatActivity {
 
 
         @Override
-        public ResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ResultAdapter.ResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transit_item, parent, false);
             TextView title = (TextView) view.findViewById(R.id.title_text);
             TextView price = (TextView) view.findViewById(R.id.price_text);
             TextView startTime = (TextView) view.findViewById(R.id.start_text);
             TextView finishTime = (TextView) view.findViewById(R.id.finish_text);
             TextView totalTime = (TextView) view.findViewById(R.id.total_time_text);
-            return new ResultViewHolder(view, title, price, startTime, finishTime, totalTime);
+            return new ResultAdapter.ResultViewHolder(view, title, price, startTime, finishTime, totalTime);
         }
 
         @Override
-        public void onBindViewHolder(ResultViewHolder holder, int position) {
+        public void onBindViewHolder(ResultAdapter.ResultViewHolder holder, int position) {
 
             final Transit.Route route = mData.get(position);
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mOnItemClickListener.itemClicked(route);
                 }
             });
 
@@ -157,9 +166,5 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent createStartIntent(Context context, Transit resultData) {
-        Intent intent = new Intent(context, ResultActivity.class);
-        intent.putExtra(EXTRA_RESULT, resultData);
-        return intent;
-    }
+
 }
