@@ -12,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import net.wandroid.transit.model.Transit;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ResultActivity extends AppCompatActivity {
 
-    public static final String EXTRA_RESULT = "EXTRA_RESULT";
+    private static final String EXTRA_RESULT = "EXTRA_RESULT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +34,17 @@ public class ResultActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         if(getIntent().hasExtra(EXTRA_RESULT)){
-            ResultAdapter adapter = new ResultAdapter(getIntent().getStringArrayListExtra(EXTRA_RESULT));
+            Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
+            ResultAdapter adapter = new ResultAdapter(transit);
             recyclerView.setAdapter(adapter);
         }
     }
 
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder>{
-        private final List<String> mData;
+        private final List<Transit.Route> mData;
 
-        private ResultAdapter(@NonNull List<String> data) {
-            mData = data;
+        private ResultAdapter(@NonNull Transit transit) {
+            mData = transit.routes;
         }
 
 
@@ -54,7 +57,7 @@ public class ResultActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ResultViewHolder holder, int position) {
-            String title = mData.get(position);
+            String title = mData.get(position).type;
             holder.titleView.setText(title);
         }
 
@@ -72,9 +75,9 @@ public class ResultActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent createStartIntent(Context context, ArrayList<String> resultData){
+    public static Intent createStartIntent(Context context, Transit resultData){
         Intent intent = new Intent(context,ResultActivity.class);
-        intent.putStringArrayListExtra(EXTRA_RESULT,resultData);
+        intent.putExtra(EXTRA_RESULT,resultData);
         return intent;
     }
 }
