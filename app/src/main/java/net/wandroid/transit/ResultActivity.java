@@ -78,8 +78,9 @@ public class ResultActivity extends AppCompatActivity {
             if (route.price != null) {
                 String price = TransitUtil.getCurrencySymbol(route.price.currency) + " " + route.price.amount;
                 holder.priceView.setText(price);
+                holder.priceView.setVisibility(View.VISIBLE);
             } else {
-                holder.priceView.setText("");
+                holder.priceView.setVisibility(View.GONE);
             }
 
             String start = route.segments.get(0).stops.get(0).datetime;

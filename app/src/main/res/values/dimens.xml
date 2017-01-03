@@ -9,5 +9,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="transit_item_corner_radius">4dp</dimen>
     <dimen name="transit_card_margin">4dp</dimen>
-    <dimen name="transit_item_info_margin">8dp</dimen>
+    <dimen name="transit_item_info_margin">16dp</dimen>
+    <dimen name="transit_item_time_margin">4dp</dimen>
+    <dimen name="arrow_img_size">18dp</dimen>
 </resources>
