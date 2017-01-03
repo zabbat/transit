@@ -10,10 +10,11 @@ import android.support.v7.widget.Toolbar;
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
 
-public class ResultActivity extends AppCompatActivity implements ResultListFragment.IResultListListener{
+public class ResultActivity extends AppCompatActivity implements ResultListFragment.IResultListListener {
 
     private static final String EXTRA_RESULT = "EXTRA_RESULT";
     public static final String FRAG_TAG = "FRAG_TAG";
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,12 +22,16 @@ public class ResultActivity extends AppCompatActivity implements ResultListFragm
         setContentView(R.layout.activity_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mFragmentManager = getFragmentManager();
 
-        if (getIntent().hasExtra(EXTRA_RESULT)) {
-            FragmentManager fragmentManager = getFragmentManager();
-            Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
-            ResultListFragment fragment = ResultListFragment.newInstance(transit);
-            fragmentManager.beginTransaction().add(R.id.fragment_container, fragment, FRAG_TAG).commit();
+        if (mFragmentManager.getBackStackEntryCount() == 0) {
+            if (getIntent().hasExtra(EXTRA_RESULT)) {
+                Transit transit = (Transit) getIntent().getSerializableExtra(EXTRA_RESULT);
+                ResultListFragment fragment = ResultListFragment.newInstance(transit);
+                mFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment, FRAG_TAG)
+                        .commit();
+            }
         }
     }
 
@@ -39,6 +44,10 @@ public class ResultActivity extends AppCompatActivity implements ResultListFragm
 
     @Override
     public void onItemSelected(Transit.Route route) {
-
+        mFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, new RoutFragment(), FRAG_TAG)
+                .addToBackStack(null)
+                .commit();
     }
+
 }
