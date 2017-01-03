@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class SearchActivity extends AppCompatActivity {
 
     @Override
@@ -17,7 +20,9 @@ public class SearchActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SearchActivity.this,ResultActivity.class));
+                ArrayList<String> data = new ArrayList<>(Arrays.asList("Place holder item 1", "Place holder item 2"));
+                Intent intent = ResultActivity.createStartIntent(SearchActivity.this, data);
+                startActivity(intent);
             }
         });
     }
