@@ -30,9 +30,11 @@ public class TransitUtil {
             case "public_transport":
                 return R.string.public_transport;
             case "car_sharing":
-                return R.string.public_transport;
+                return R.string.car_sharing;
             case "private_bike":
-                return R.string.public_transport;
+                return R.string.private_bike;
+            case "bike_sharing":
+                return R.string.bike_sharing;
             default:
                 return NO_RESOURCE;
         }
