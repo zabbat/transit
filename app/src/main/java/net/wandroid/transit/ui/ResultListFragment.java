@@ -1,6 +1,7 @@
 package net.wandroid.transit.ui;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 public class ResultListFragment extends Fragment {
 
+    public interface IResultListListener {
+        void onItemSelected(Transit.Route route);
+    }
+
     public static final String ARG_TRANSIT = "ARG_TRANSIT";
 
     public static ResultListFragment newInstance(Transit transit) {
@@ -33,6 +38,8 @@ public class ResultListFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    private IResultListListener mResultListListener;
 
     @Nullable
     @Override
@@ -47,7 +54,9 @@ public class ResultListFragment extends Fragment {
             ResultAdapter adapter = new ResultAdapter(transit, getResources(), new ResultAdapter.IOnItemClickListener() {
                 @Override
                 public void itemClicked(Transit.Route route) {
-                    Toast.makeText(getActivity(), "click:" + route.price.amount, Toast.LENGTH_SHORT).show();
+                    if (mResultListListener != null) {
+                        mResultListListener.onItemSelected(route);
+                    }
                 }
             });
             recyclerView.setAdapter(adapter);
@@ -55,6 +64,20 @@ public class ResultListFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof IResultListListener) {
+            mResultListListener = (IResultListListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        mResultListListener = null;
+        super.onDetach();
     }
 
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {

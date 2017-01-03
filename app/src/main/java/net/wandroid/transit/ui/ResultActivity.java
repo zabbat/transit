@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
 
-public class ResultActivity extends AppCompatActivity {
+public class ResultActivity extends AppCompatActivity implements ResultListFragment.IResultListListener{
 
     private static final String EXTRA_RESULT = "EXTRA_RESULT";
     public static final String FRAG_TAG = "FRAG_TAG";
@@ -35,5 +35,10 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = new Intent(context, ResultActivity.class);
         intent.putExtra(EXTRA_RESULT, resultData);
         return intent;
+    }
+
+    @Override
+    public void onItemSelected(Transit.Route route) {
+
     }
 }
