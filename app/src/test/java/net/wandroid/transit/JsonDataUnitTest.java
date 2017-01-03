@@ -55,6 +55,13 @@ public class JsonDataUnitTest {
     }
 
     @Test
+    public void get_price_correct() throws IOException {
+        Call<Transit> call = mService.getTransits();
+        Transit result = call.execute().body();
+        assertTrue(result.routes.get(0).price.currency!=null);
+    }
+
+    @Test
     public void get_segments_correct() throws IOException {
         Call<Transit> call = mService.getTransits();
         Transit result = call.execute().body();

@@ -7,4 +7,7 @@
     <dimen name="search_bar_label_width">42dp</dimen>
     <dimen name="search_bar_target_margin_end">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="transit_item_corner_radius">4dp</dimen>
+    <dimen name="transit_card_margin">4dp</dimen>
+    <dimen name="transit_item_info_margin">8dp</dimen>
 </resources>

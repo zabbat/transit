@@ -4,4 +4,10 @@
     <string name="end_txt">End</string>
     <string name="search_txt">search</string>
     <string name="title_activity_result">ResultActivity</string>
+
+    <string name="public_transport">Public Transport</string>
+    <string name="car_sharing">Car Sharing</string>
+    <string name="private_bike">Private Bike</string>
+    <string name="bike_sharing">Bike Sharing</string>
+
 </resources>

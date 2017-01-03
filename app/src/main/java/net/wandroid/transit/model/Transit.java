@@ -15,7 +15,12 @@ public class Transit implements Serializable {
         public String type;
         public String provider;
         public List<Segment> segments;
+        public Price price;
 
+        public static class Price implements Serializable{
+            public String currency;
+            public int amount;
+        }
 
         public static class Segment implements Serializable {
             public String name;
