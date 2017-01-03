@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+   API key for google maps. Note this is the development key (not restricted)
+   For release a release key should be used and added to the release flavour.
+   TODO: Add key to release flavour
+   -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDOlpOK0Z1keHEWfjn3xegtvpPeYGwD50c</string>
+
+</resources>
