@@ -3,13 +3,13 @@
                                                  xmlns:app="http://schemas.android.com/apk/res-auto"
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
-                                                 >
+    >
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_anchor="@+id/route_view"
+        app:layout_anchor="@+id/route_layout"
         />
 
     <android.support.design.widget.FloatingActionButton
@@ -17,16 +17,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@+id/route_view"
+        app:layout_anchor="@+id/route_layout"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/ic_dialog_email"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:srcCompat="@android:drawable/ic_dialog_email"
         />
 
 
     <!--TODO: implement custom behavior to control maxsize and parallax scroll the map-->
     <FrameLayout
-        android:id="@+id/route_view"
+        android:id="@+id/route_layout"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:background="@color/route_bottom_sheet_color"
@@ -34,8 +34,8 @@
         app:layout_behavior="@string/bottom_sheet_behavior"
         >
 
-        <include
-            layout="@layout/view_transit"
+        <net.wandroid.transit.ui.RouteView
+            android:id="@+id/route_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"/>

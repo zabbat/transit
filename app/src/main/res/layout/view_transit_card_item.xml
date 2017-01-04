@@ -10,8 +10,8 @@
     android:clickable="true"
     card_view:cardCornerRadius="@dimen/transit_item_corner_radius">
 
-    <include
-        layout="@layout/view_transit"
+    <net.wandroid.transit.ui.RouteView
+        android:id="@id/route_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

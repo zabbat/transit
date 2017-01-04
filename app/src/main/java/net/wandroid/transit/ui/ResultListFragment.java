@@ -98,12 +98,8 @@ public class ResultListFragment extends Fragment {
         @Override
         public ResultAdapter.ResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transit_card_item, parent, false);
-            TextView title = (TextView) view.findViewById(R.id.title_text);
-            TextView price = (TextView) view.findViewById(R.id.price_text);
-            TextView startTime = (TextView) view.findViewById(R.id.start_text);
-            TextView finishTime = (TextView) view.findViewById(R.id.finish_text);
-            TextView totalTime = (TextView) view.findViewById(R.id.total_time_text);
-            return new ResultAdapter.ResultViewHolder(view, title, price, startTime, finishTime, totalTime);
+            RouteView routeView = (RouteView) view.findViewById(R.id.route_view);
+            return new ResultAdapter.ResultViewHolder(view, routeView);
         }
 
         @Override
@@ -117,48 +113,7 @@ public class ResultListFragment extends Fragment {
                 }
             });
 
-            int title = TransitUtil.getTypeStringResourceId(route.type);
-            if (title == TransitUtil.NO_RESOURCE) {
-                // if no matching string resource for the type, use the type name
-                holder.titleView.setText(route.type);
-            } else {
-                holder.titleView.setText(title);
-            }
-
-            if (route.price != null) {
-                String price = TransitUtil.getCurrencySymbol(route.price.currency) + " " + route.price.amount;
-                holder.priceView.setText(price);
-                holder.priceView.setVisibility(View.VISIBLE);
-            } else {
-                holder.priceView.setVisibility(View.GONE);
-            }
-
-            String start = route.segments.get(0).stops.get(0).datetime;
-            try {
-                holder.startView.setText(TransitUtil.formatTimeStamp(start));
-            } catch (ParseException e) {
-                holder.startView.setText(R.string.N_A);
-                e.printStackTrace();
-            }
-
-            int lastSegment = route.segments.size() - 1;
-            int lastStop = route.segments.get(lastSegment).stops.size() - 1;
-            String finish = route.segments.get(lastSegment).stops.get(lastStop).datetime;
-            try {
-                holder.finishView.setText(TransitUtil.formatTimeStamp(finish));
-            } catch (ParseException e) {
-                holder.startView.setText(R.string.N_A);
-                e.printStackTrace();
-            }
-            try {
-                String minutes = Long.toString(TimeUnit.MILLISECONDS.toMinutes(TransitUtil.totalTimeMilli(start, finish)));
-                String total = mResources.getString(R.string.total_time_min, minutes);
-                holder.totalView.setText(total);
-
-            } catch (ParseException e) {
-                holder.startView.setText(R.string.N_A);
-                e.printStackTrace();
-            }
+            holder.routeView.setRoute(route);
         }
 
 
@@ -169,20 +124,12 @@ public class ResultListFragment extends Fragment {
 
         public class ResultViewHolder extends RecyclerView.ViewHolder {
             private View view;
-            private TextView titleView;
-            private TextView priceView;
-            private TextView startView;
-            private TextView finishView;
-            private TextView totalView;
+            private RouteView routeView;
 
-            public ResultViewHolder(View itemView, TextView titleView, TextView priceView, TextView startView, TextView finishView, TextView totalView) {
+            public ResultViewHolder(View itemView, RouteView routeView) {
                 super(itemView);
                 view = itemView;
-                this.titleView = titleView;
-                this.priceView = priceView;
-                this.startView = startView;
-                this.finishView = finishView;
-                this.totalView = totalView;
+                this.routeView = routeView;
             }
 
         }

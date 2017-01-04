@@ -44,26 +44,8 @@ public class RoutFragment extends Fragment implements OnMapReadyCallback {
 
         mRoute = (Transit.Route) getArguments().getSerializable(ARGS_ROUTE);
 
-        //TODO: create custom view
-//        View routeView = view.findViewById(R.id.route_view);
-//        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(routeView);
-//       // bottomSheetBehavior.setPeekHeight(1);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-
-        TextView title = (TextView) view.findViewById(R.id.title_text);
-        title.setText(TransitUtil.getTypeStringResourceId(mRoute.type));
-        TextView price = (TextView) view.findViewById(R.id.price_text);
-        price.setText(TransitUtil.getCurrencySymbol(mRoute.price.currency) + " " + mRoute.price.amount);
-        TextView startTime = (TextView) view.findViewById(R.id.start_text);
-        try {
-            String start = TransitUtil.formatTimeStamp(mRoute.segments.get(0).stops.get(0).datetime);
-            startTime.setText(start);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        TextView finishTime = (TextView) view.findViewById(R.id.finish_text);
-        TextView totalTime = (TextView) view.findViewById(R.id.total_time_text);
-
+        RouteView routeView = (RouteView) view.findViewById(R.id.route_view);
+        routeView.setRoute(mRoute);
 
         return view;
     }
