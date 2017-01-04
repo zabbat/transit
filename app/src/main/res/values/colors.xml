@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="search_bar_background">#FFF</color>
     <color name="arrow_tint">#000</color>
+    <color name="route_bottom_sheet_color">#fff</color>
 </resources>

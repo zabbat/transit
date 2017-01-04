@@ -29,13 +29,6 @@
         android:id="@+id/fragment_container"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/result_recycler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:scrollbars="vertical"-->
-        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
-
 
     <!--<include layout="@layout/content_result"/>-->
 

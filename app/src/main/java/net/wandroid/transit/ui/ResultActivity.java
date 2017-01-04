@@ -44,8 +44,9 @@ public class ResultActivity extends AppCompatActivity implements ResultListFragm
 
     @Override
     public void onItemSelected(Transit.Route route) {
+        RoutFragment fragment = RoutFragment.newInstance(route);
         mFragmentManager.beginTransaction()
-                .add(R.id.fragment_container, new RoutFragment(), FRAG_TAG)
+                .add(R.id.fragment_container, fragment, FRAG_TAG)
                 .addToBackStack(null)
                 .commit();
     }

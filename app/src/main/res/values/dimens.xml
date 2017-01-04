@@ -13,4 +13,5 @@
     <dimen name="transit_item_time_margin">4dp</dimen>
     <dimen name="arrow_img_size">18dp</dimen>
     <dimen name="transit_item_margin">8dp</dimen>
+    <dimen name="view_transit_height">120dp</dimen>
 </resources>

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
@@ -98,7 +97,7 @@ public class ResultListFragment extends Fragment {
 
         @Override
         public ResultAdapter.ResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transit_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_transit_card_item, parent, false);
             TextView title = (TextView) view.findViewById(R.id.title_text);
             TextView price = (TextView) view.findViewById(R.id.price_text);
             TextView startTime = (TextView) view.findViewById(R.id.start_text);
