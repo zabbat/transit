@@ -125,8 +125,12 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
         }
         Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
-        LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+        //TODO: according to documentation for getLastLocation : "If a location is not available, which should happen very rarely, null will be returned."
+        // an improvement is to request location update once.
+        if (currentLocation != null) {
+            LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+        }
     }
 
     @Override
