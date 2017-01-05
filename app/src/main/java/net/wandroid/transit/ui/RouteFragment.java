@@ -4,32 +4,33 @@ package net.wandroid.transit.ui;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
-import net.wandroid.transit.model.TransitUtil;
 
-import java.text.ParseException;
+public class RouteFragment extends Fragment implements OnMapReadyCallback {
 
-public class RoutFragment extends Fragment implements OnMapReadyCallback {
-
-    public static final String ARGS_ROUTE = "ARGS_ROUTE";
+    private static final String ARGS_ROUTE = "ARGS_ROUTE";
+    private static final float DEFAULT_ZOOM = 13f;
+    private static final String START_TITLE = "Start";
+    private static final String END_TITLE = "End";
     private MapView mMapView;
     private Transit.Route mRoute;
 
-    public static RoutFragment newInstance(Transit.Route route) {
+    public static RouteFragment newInstance(Transit.Route route) {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_ROUTE, route);
-        RoutFragment fragment = new RoutFragment();
+        RouteFragment fragment = new RouteFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,6 +90,17 @@ public class RoutFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //TODO: use LatLngBounds.builder() to calculate bounds and zoom
+        Transit.Route.Segment.Stop firstStop = mRoute.segments.get(0).stops.get(0);
+        LatLng start = new LatLng(firstStop.lat, firstStop.lng);
+        Transit.Route.Segment lastSegment = mRoute.segments.get(mRoute.segments.size() - 1);
+        Transit.Route.Segment.Stop lastStop = lastSegment.stops.get(lastSegment.stops.size() - 1);
+        LatLng end = new LatLng(lastStop.lat, lastStop.lng);
+
+        googleMap.addMarker(new MarkerOptions().position(start).title(START_TITLE)).showInfoWindow();
+        googleMap.addMarker(new MarkerOptions().position(end).title(END_TITLE));
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, DEFAULT_ZOOM));
 
     }
 }

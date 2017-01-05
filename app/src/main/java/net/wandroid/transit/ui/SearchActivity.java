@@ -1,11 +1,27 @@
 package net.wandroid.transit.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
@@ -18,17 +34,34 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity implements Callback<Transit> {
+public class SearchActivity extends AppCompatActivity implements Callback<Transit>, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
-    public static final String TAG = SearchActivity.class.getCanonicalName();
-    public static final String LOCAL_JSON_FILE = "data.json";
-    public static final String HTTP_LOCAL_FILE = "http://local.file";
+    private static final String TAG = SearchActivity.class.getCanonicalName();
+    private static final String LOCAL_JSON_FILE = "data.json";
+    private static final String HTTP_LOCAL_FILE = "http://local.file";
+    private static final float DEFAULT_ZOOM = 12f;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+
+    private TextView mStartSearchTextView;
+    private TextView mEndSearchTextView;
+
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        mStartSearchTextView = (TextView) findViewById(R.id.start_search);
+        mEndSearchTextView = (TextView) findViewById(R.id.end_search);
+
         Button searchButton = (Button) findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +79,18 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
         });
     }
 
+
+    private synchronized void connectGoogleService() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        mGoogleApiClient.connect();
+    }
+
     @Override
     public void onResponse(Call<Transit> call, Response<Transit> response) {
         Intent intent = ResultActivity.createStartIntent(SearchActivity.this, response.body());
@@ -56,4 +101,58 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
     public void onFailure(Call<Transit> call, Throwable t) {
         Log.d(TAG, "failed to get json data: " + t.getMessage());
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mGoogleMap = googleMap;
+        //TODO: make start and end selectable. Using placeholder text.
+        mStartSearchTextView.setText("Start address, postcode, country");
+        mEndSearchTextView.setText("End address, postcode, country");
+        connectGoogleService();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        updateCurrentLocation();
+    }
+
+    private void updateCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+            return;
+        }
+        Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (mGoogleApiClient == null) {
+                        connectGoogleService();
+                    }
+                    updateCurrentLocation();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "failed to connect to google services: " + connectionResult.getErrorMessage());
+    }
 }
+

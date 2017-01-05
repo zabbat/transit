@@ -22,4 +22,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="search_bar_text" parent="@android:style/TextAppearance.Small.Inverse">
+    </style>
+
 </resources>
