@@ -52,12 +52,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mMapView.onStart();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
@@ -67,12 +61,6 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
     public void onPause() {
         mMapView.onPause();
         super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        mMapView.onStop();
-        super.onStop();
     }
 
     @Override
