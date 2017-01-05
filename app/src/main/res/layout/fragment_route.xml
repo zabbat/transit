@@ -28,12 +28,13 @@
     <FrameLayout
         android:id="@+id/route_layout"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="@dimen/max_bottom_sheet_scroll"
         android:background="@color/route_bottom_sheet_color"
+        android:clickable="true"
         app:behavior_peekHeight="@dimen/view_transit_height"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        android:clickable="true"
         >
+
 
         <net.wandroid.transit.ui.RouteView
             android:id="@+id/route_view"

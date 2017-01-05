@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
@@ -22,6 +23,7 @@ public class ResultActivity extends AppCompatActivity implements ResultListFragm
         setContentView(R.layout.activity_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFragmentManager = getFragmentManager();
 
         if (mFragmentManager.getBackStackEntryCount() == 0) {
@@ -51,4 +53,18 @@ public class ResultActivity extends AppCompatActivity implements ResultListFragm
                 .commit();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                if (mFragmentManager.getBackStackEntryCount() > 0) {
+                    mFragmentManager.popBackStack();
+                    return true;
+                }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

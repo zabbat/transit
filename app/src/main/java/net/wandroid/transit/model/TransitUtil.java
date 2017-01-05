@@ -2,11 +2,10 @@ package net.wandroid.transit.model;
 
 import net.wandroid.transit.R;
 
-import java.text.DateFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by zabbat on 03/01/17.
@@ -15,12 +14,13 @@ import java.util.Locale;
 public class TransitUtil {
 
     public static final int NO_RESOURCE = -1;
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String HOURS_MINUTES_FORMAT = "HH:mm";
 
     /**
      * Convert currency to a symbol. If not matching symbol the
      * currency string is returned.
+     *
      * @param currency the currency name
      * @return the symbol as a string, or the currency name if no symbol is matching
      */
@@ -34,7 +34,7 @@ public class TransitUtil {
     }
 
     public static int getTypeStringResourceId(String typeName) {
-        switch (typeName){
+        switch (typeName) {
             case "public_transport":
                 return R.string.public_transport;
             case "car_sharing":
@@ -49,17 +49,15 @@ public class TransitUtil {
     }
 
     public static String formatTimeStamp(String timeStamp) throws ParseException {
-        DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.getDefault());
-        Date date = df.parse(timeStamp);
-        SimpleDateFormat hoursMinutesFormatter = new SimpleDateFormat(HOURS_MINUTES_FORMAT,Locale.getDefault());
-        return hoursMinutesFormatter.format(date);
+        DateTimeFormatter out = ISODateTimeFormat.hourMinute();
+        DateTimeFormatter fmt = ISODateTimeFormat.dateTimeParser();
+        return out.print(fmt.parseDateTime(timeStamp));
     }
 
     public static long totalTimeMilli(String start, String finish) throws ParseException {
-        DateFormat df = new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.getDefault());
-        Date dateStart = df.parse(start);
-        Date dateFinish = df.parse(finish);
-
-        return dateFinish.getTime() - dateStart.getTime();
+        DateTimeFormatter fmt = ISODateTimeFormat.dateTimeParser();
+        long startMillis = fmt.parseDateTime(start).getMillis();
+        long finishMillis = fmt.parseDateTime(finish).getMillis();
+        return finishMillis - startMillis;
     }
 }
