@@ -3,12 +3,13 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="@dimen/search_bar_height"
-              android:background="@color/search_bar_background"
-              android:orientation="vertical"
-              android:layout_marginLeft="@dimen/search_bar_vertical_margin"
-              android:layout_marginStart="@dimen/search_bar_vertical_margin"
               android:layout_marginEnd="@dimen/search_bar_vertical_margin"
-              android:layout_marginRight="@dimen/search_bar_vertical_margin">
+              android:layout_marginLeft="@dimen/search_bar_vertical_margin"
+              android:layout_marginRight="@dimen/search_bar_vertical_margin"
+              android:layout_marginStart="@dimen/search_bar_vertical_margin"
+              android:background="@color/search_bar_background"
+              android:clickable="true"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,6 +26,8 @@
             />
 
         <TextView
+            android:id="@+id/start_search"
+            style="@style/search_bar_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/search_bar_target_margin_end"
@@ -47,6 +50,8 @@
             />
 
         <TextView
+            android:id="@+id/end_search"
+            style="@style/search_bar_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/search_bar_target_margin_end"
@@ -59,14 +64,15 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         >
+
         <Button
+            android:id="@+id/search_button"
+            style="?attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/search_txt"
             android:layout_gravity="center_vertical|end"
-            style="?attr/borderlessButtonStyle"
+            android:text="@string/search_txt"
             android:textColor="@color/colorPrimary"
-            android:id="@+id/search_button"
             />
     </FrameLayout>
 

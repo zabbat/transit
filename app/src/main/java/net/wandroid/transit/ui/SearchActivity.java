@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,6 +37,9 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
      */
     private static final LatLng DEFAULT_LAT_LNG = new LatLng(52.528187, 13.410404);
 
+    private TextView mStartSearchTextView;
+    private TextView mEndSearchTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +47,9 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mStartSearchTextView = (TextView) findViewById(R.id.start_search);
+        mEndSearchTextView = (TextView) findViewById(R.id.end_search);
 
         Button searchButton = (Button) findViewById(R.id.search_button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -77,5 +84,9 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
         //TODO: Use myLocation as start point
         LatLng currentLocation = DEFAULT_LAT_LNG;
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM));
+
+        mStartSearchTextView.setText("Torstraße 105, Berlin");
+        mEndSearchTextView.setText("S+U Potsdamer Platz, Berlin");
+
     }
 }
