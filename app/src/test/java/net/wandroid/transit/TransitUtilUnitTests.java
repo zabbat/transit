@@ -33,7 +33,7 @@ public class TransitUtilUnitTests {
 
     @Test
     public void timestamp_in_hh_MM_is_correct() throws ParseException {
-        String time = TransitUtil.formatTimeStamp("2015-04-17T13:30:00+02:00");
+        String time = TransitUtil.formatTimeStampToHoursMinutes("2015-04-17T13:30:00+02:00");
         Assert.assertEquals("12:30", time);
     }
 

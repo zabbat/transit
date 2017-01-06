@@ -24,10 +24,11 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Public Transport"/>
 
+    <!--TODO: container for dynamically add transport icons-->
     <LinearLayout
         android:id="@+id/image_layout"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/transport_icon_size"
+        android:layout_height="@dimen/transport_icon_size"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -39,8 +40,8 @@
         android:id="@+id/price_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="24dp"
-        android:paddingRight="24dp"
+        android:paddingEnd="@dimen/price_padding_end"
+        android:paddingRight="@dimen/price_padding_end"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image_layout"
@@ -67,7 +68,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/start_text"
         app:layout_constraintTop_toBottomOf="@+id/image_layout"
-        />
+        tools:ignore="ContentDescription"/>
 
     <TextView
         android:id="@+id/finish_text"

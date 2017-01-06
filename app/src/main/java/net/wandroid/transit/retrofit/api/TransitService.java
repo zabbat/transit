@@ -11,6 +11,9 @@ import retrofit2.http.GET;
  */
 public interface TransitService {
 
+    /**
+     * Api path. Example '/api/transits'
+     */
     String API_PATH = "/";
 
     @GET(API_PATH)

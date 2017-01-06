@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * These test are not meant to check the integrity of the data,
  * as it should be done on the backend.
  */
-public class JsonDataUnitTest {
+public class TransitJsonUnitTest {
 
     /**
      * Path to the local json file. This file

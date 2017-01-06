@@ -34,16 +34,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Activity that handles search
+ */
 public class SearchActivity extends AppCompatActivity implements Callback<Transit>, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
     private static final String TAG = SearchActivity.class.getCanonicalName();
     private static final String LOCAL_JSON_FILE = "data.json";
+    /**
+     * Url is required even if local file
+     */
     private static final String HTTP_LOCAL_FILE = "http://local.file";
     private static final float DEFAULT_ZOOM = 12f;
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
-
+    /**
+     * TODO: the user should be able to search by clicking on the start field or interacting with the map instead of using text views
+     */
     private TextView mStartSearchTextView;
     private TextView mEndSearchTextView;
 
@@ -80,6 +88,9 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
     }
 
 
+    /**
+     * connect to google location service/**
+     */
     private synchronized void connectGoogleService() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -93,6 +104,7 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
 
     @Override
     public void onResponse(Call<Transit> call, Response<Transit> response) {
+        // transit data is ready to use
         Intent intent = ResultActivity.createStartIntent(SearchActivity.this, response.body());
         startActivity(intent);
     }
@@ -116,6 +128,9 @@ public class SearchActivity extends AppCompatActivity implements Callback<Transi
         updateCurrentLocation();
     }
 
+    /**
+     * Set map to current location. This will prompt a permission dialog if 6.0+
+     */
     private void updateCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
