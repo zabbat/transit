@@ -16,13 +16,15 @@ import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
+/**
+ * Generates services for retrofit
+ */
 public class ServiceGenerator {
 
     /**
      * Create a retrofit service
      * @param serviceClass the service class
-     * @param url the base url
+     * @param url the base url. Must be a valid url even if file is local.
      * @param interceptor interceptor. If null it will be ignored
      * @param <T> the service type
      * @return the service

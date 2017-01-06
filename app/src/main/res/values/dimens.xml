@@ -14,4 +14,6 @@
     <dimen name="arrow_img_size">18dp</dimen>
     <dimen name="transit_item_margin">8dp</dimen>
     <dimen name="view_transit_height">120dp</dimen>
+    <dimen name="transport_icon_size">48dp</dimen>
+    <dimen name="price_padding_end">24dp</dimen>
 </resources>

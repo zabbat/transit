@@ -29,8 +29,8 @@
                 />
 
             <include
-                layout="@layout/view_search_bar"
                 android:id="@+id/top_search_bar"
+                layout="@layout/view_search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/search_bar_height"/>
         </LinearLayout>

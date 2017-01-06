@@ -17,10 +17,13 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Tests for the custom view RouteView
+ */
 @RunWith(AndroidJUnit4.class)
 public class RouteViewInstrumentedTest {
 
-    public static final int TEST_PRICE = 100;
+    private static final int TEST_PRICE = 100;
     private RouteView mRouteView;
     private Transit.Route mRoute;
 

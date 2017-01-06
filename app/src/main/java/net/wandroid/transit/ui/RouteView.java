@@ -63,7 +63,7 @@ public class RouteView extends FrameLayout {
 
         String start = route.segments.get(0).stops.get(0).datetime;
         try {
-            mStartTime.setText(TransitUtil.formatTimeStamp(start));
+            mStartTime.setText(TransitUtil.formatTimeStampToHoursMinutes(start));
         } catch (ParseException e) {
             mStartTime.setText(R.string.N_A);
             e.printStackTrace();
@@ -73,7 +73,7 @@ public class RouteView extends FrameLayout {
         int lastStop = route.segments.get(lastSegment).stops.size() - 1;
         String finish = route.segments.get(lastSegment).stops.get(lastStop).datetime;
         try {
-            mFinishTime.setText(TransitUtil.formatTimeStamp(finish));
+            mFinishTime.setText(TransitUtil.formatTimeStampToHoursMinutes(finish));
         } catch (ParseException e) {
             mFinishTime.setText(R.string.N_A);
             e.printStackTrace();

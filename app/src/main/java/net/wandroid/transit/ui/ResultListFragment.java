@@ -11,26 +11,42 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
-import net.wandroid.transit.model.TransitUtil;
 
-import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-
+/**
+ * A fragment that displays all routes in a list and let the user select one.
+ */
 public class ResultListFragment extends Fragment {
 
+    /**
+     * Callbacks for fragment listeners
+     */
     public interface IResultListListener {
+        /**
+         * Called when a item is selected in the list
+         *
+         * @param route
+         */
         void onItemSelected(Transit.Route route);
     }
 
-    public static final String ARG_TRANSIT = "ARG_TRANSIT";
+    /**
+     * Argument key for the transit data
+     */
+    private static final String ARG_TRANSIT = "ARG_TRANSIT";
 
-    public static ResultListFragment newInstance(Transit transit) {
+    /**
+     * Method that should be used when creating a new instance
+     * of the fragment
+     *
+     * @param transit the transit data
+     * @return a new fragment with arguments set
+     */
+    public static ResultListFragment newInstance(@NonNull Transit transit) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_TRANSIT, transit);
         ResultListFragment fragment = new ResultListFragment();
@@ -50,14 +66,18 @@ public class ResultListFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_TRANSIT)) {
             Transit transit = (Transit) getArguments().getSerializable(ARG_TRANSIT);
-            ResultAdapter adapter = new ResultAdapter(transit, getResources(), new ResultAdapter.IOnItemClickListener() {
-                @Override
-                public void itemClicked(Transit.Route route) {
-                    if (mResultListListener != null) {
-                        mResultListListener.onItemSelected(route);
+            ResultAdapter adapter = null;
+            if (transit != null) {
+                adapter = new ResultAdapter(transit, new ResultAdapter.IOnItemClickListener() {
+                    @Override
+                    public void itemClicked(Transit.Route route) {
+                        if (mResultListListener != null) {
+                            mResultListListener.onItemSelected(route);
+                        }
                     }
-                }
-            });
+                });
+            }
+            //TODO: handle empty or no Transit data
             recyclerView.setAdapter(adapter);
         }
 
@@ -79,18 +99,33 @@ public class ResultListFragment extends Fragment {
         super.onDetach();
     }
 
+    /**
+     * Adapter for the recyclerview that displays the routes
+     */
     private static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ResultViewHolder> {
-        public interface IOnItemClickListener {
+        /**
+         * Callbacks for item interactions
+         */
+        interface IOnItemClickListener {
+            /**
+             * called when the user clicks on an item
+             *
+             * @param route the route clicked on
+             */
             void itemClicked(Transit.Route route);
         }
 
         private final List<Transit.Route> mData;
-        private final Resources mResources;
         private final ResultAdapter.IOnItemClickListener mOnItemClickListener;
 
-        private ResultAdapter(@NonNull Transit transit, Resources resources, ResultAdapter.IOnItemClickListener onItemClickListener) {
+        /**
+         * Constructor
+         *
+         * @param transit             the transit to be displayed
+         * @param onItemClickListener the item click listener
+         */
+        private ResultAdapter(@NonNull Transit transit, ResultAdapter.IOnItemClickListener onItemClickListener) {
             mData = transit.routes;
-            mResources = resources;
             mOnItemClickListener = onItemClickListener;
         }
 
@@ -109,7 +144,9 @@ public class ResultListFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mOnItemClickListener.itemClicked(route);
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.itemClicked(route);
+                    }
                 }
             });
 
@@ -122,11 +159,11 @@ public class ResultListFragment extends Fragment {
             return mData.size();
         }
 
-        public class ResultViewHolder extends RecyclerView.ViewHolder {
+        class ResultViewHolder extends RecyclerView.ViewHolder {
             private View view;
             private RouteView routeView;
 
-            public ResultViewHolder(View itemView, RouteView routeView) {
+            ResultViewHolder(View itemView, RouteView routeView) {
                 super(itemView);
                 view = itemView;
                 this.routeView = routeView;

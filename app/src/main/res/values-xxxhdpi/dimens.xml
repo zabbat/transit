@@ -1,4 +1,3 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="max_bottom_sheet_scroll">500dp</dimen>
 </resources>

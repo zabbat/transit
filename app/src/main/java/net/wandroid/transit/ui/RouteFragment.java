@@ -18,15 +18,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import net.wandroid.transit.R;
 import net.wandroid.transit.model.Transit;
 
+/**
+ * Fragment that shows the map and the selected route
+ */
 public class RouteFragment extends Fragment implements OnMapReadyCallback {
 
+    /**
+     * Arg key for route data
+     */
     private static final String ARGS_ROUTE = "ARGS_ROUTE";
+    /**
+     * Default zoom.
+     * TODO: Calculate zoom so it contains all stops
+     */
     private static final float DEFAULT_ZOOM = 13f;
     private static final String START_TITLE = "Start";
     private static final String END_TITLE = "End";
     private MapView mMapView;
     private Transit.Route mRoute;
 
+    /**
+     * creates a new instance of the frament
+     * @param route the route data
+     * @return a new fragment
+     */
     public static RouteFragment newInstance(Transit.Route route) {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_ROUTE, route);
@@ -41,10 +56,10 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         View view = View.inflate(getActivity(), R.layout.fragment_route, null);
         mMapView = (MapView) view.findViewById(R.id.map_view);
         mMapView.onCreate(savedInstanceState);
+
         mMapView.getMapAsync(this);
 
         mRoute = (Transit.Route) getArguments().getSerializable(ARGS_ROUTE);
-
         RouteView routeView = (RouteView) view.findViewById(R.id.route_view);
         routeView.setRoute(mRoute);
 
@@ -79,8 +94,11 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         //TODO: use LatLngBounds.builder() to calculate bounds and zoom
+
+        //Show start and end as pins on the map
         Transit.Route.Segment.Stop firstStop = mRoute.segments.get(0).stops.get(0);
         LatLng start = new LatLng(firstStop.lat, firstStop.lng);
+
         Transit.Route.Segment lastSegment = mRoute.segments.get(mRoute.segments.size() - 1);
         Transit.Route.Segment.Stop lastStop = lastSegment.stops.get(lastSegment.stops.size() - 1);
         LatLng end = new LatLng(lastStop.lat, lastStop.lng);
@@ -89,6 +107,5 @@ public class RouteFragment extends Fragment implements OnMapReadyCallback {
         googleMap.addMarker(new MarkerOptions().position(end).title(END_TITLE));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(start, DEFAULT_ZOOM));
-
     }
 }

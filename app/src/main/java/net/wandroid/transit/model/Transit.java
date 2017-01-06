@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The model of the json data
+ * The model of the json data.
+ * Transit is serializable so it can be sent through intent.
+ * However, an improvement is to make them either parcelable
+ * or create a Singleton class .
  */
+
 public class Transit implements Serializable {
 
     public List<Route> routes;
 
+    @SuppressWarnings("unused")
     public static class Route implements Serializable {
         public String type;
         public String provider;
@@ -44,6 +49,7 @@ public class Transit implements Serializable {
 
     public Map<String, Provider> provider_attributes;
 
+    @SuppressWarnings({"unused", "WeakerAccess"})
     public static class Provider implements Serializable {
         public String provider_icon_url;
         public String disclaimer;
